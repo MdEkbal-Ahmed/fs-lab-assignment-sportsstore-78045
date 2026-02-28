@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SportsStore.Models.ViewModels;
@@ -24,8 +24,8 @@ namespace SportsStore.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel loginModel) {
-            if (ModelState.IsValid) {
-                IdentityUser user =
+            if (ModelState.IsValid && !string.IsNullOrEmpty(loginModel.Name) && loginModel.Password != null) {
+                IdentityUser? user =
                     await userManager.FindByNameAsync(loginModel.Name);
                 if (user != null) {
                     await signInManager.SignOutAsync();
