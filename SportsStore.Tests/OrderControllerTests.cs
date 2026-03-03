@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SportsStore.Controllers;
 using SportsStore.Models;
@@ -16,8 +17,9 @@ namespace SportsStore.Tests {
             Cart cart = new Cart();
             // Arrange - create the order
             Order order = new Order();
-            // Arrange - create an instance of the controller
-            OrderController target = new OrderController(mock.Object, cart);
+            // Arrange - create a mock logger and the controller
+            var loggerMock = new Mock<ILogger<OrderController>>();
+            OrderController target = new OrderController(mock.Object, cart, loggerMock.Object);
 
             // Act
             ViewResult? result = target.Checkout(order) as ViewResult;
@@ -38,8 +40,9 @@ namespace SportsStore.Tests {
             // Arrange - create a cart with one item
             Cart cart = new Cart();
             cart.AddItem(new Product(), 1);
-            // Arrange - create an instance of the controller
-            OrderController target = new OrderController(mock.Object, cart);
+            // Arrange - create a mock logger and the controller
+            var loggerMock = new Mock<ILogger<OrderController>>();
+            OrderController target = new OrderController(mock.Object, cart, loggerMock.Object);
             // Arrange - add an error to the model
             target.ModelState.AddModelError("error", "error");
 
@@ -61,8 +64,9 @@ namespace SportsStore.Tests {
             // Arrange - create a cart with one item
             Cart cart = new Cart();
             cart.AddItem(new Product(), 1);
-            // Arrange - create an instance of the controller
-            OrderController target = new OrderController(mock.Object, cart);
+            // Arrange - create a mock logger and the controller
+            var loggerMock = new Mock<ILogger<OrderController>>();
+            OrderController target = new OrderController(mock.Object, cart, loggerMock.Object);
 
             // Act - try to checkout
             RedirectToPageResult? result =
