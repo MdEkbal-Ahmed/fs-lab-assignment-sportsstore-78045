@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using SportsStore.Models;
-
+using SportsStore.Services;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllersWithViews();
 
@@ -14,6 +17,7 @@ builder.Services.AddDbContext<StoreDbContext>(opts => {
 
 builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddDistributedMemoryCache();
@@ -31,6 +35,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 var app = builder.Build();
 
+app.Use(async (context, next) => {
+    try {
+        await next(context);
+    }
+    catch (Exception ex) {
+        Log.Error(ex, "Unhandled exception. Path: {RequestPath}", context.Request.Path);
+        throw;
+    }
+});
+
 if (app.Environment.IsProduction()) {
     app.UseExceptionHandler("/error");
 }
@@ -41,6 +55,7 @@ app.UseRequestLocalization(opts => {
     .SetDefaultCulture("en-US");
 });
 
+app.UseSerilogRequestLogging();
 app.UseStaticFiles();
 app.UseSession();
 
@@ -68,5 +83,7 @@ app.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
 
 SeedData.EnsurePopulated(app);
 IdentitySeedData.EnsurePopulated(app);
+
+Log.Information("Application starting up. Environment: {EnvironmentName}", app.Environment.EnvironmentName);
 
 app.Run();

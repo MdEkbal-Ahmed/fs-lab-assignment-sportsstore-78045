@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Payment Cancelled";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h2>Payment cancelled</h2>
+    <p>You cancelled the payment. Your cart is unchanged and no charge was made.</p>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
+    <a class="btn btn-secondary" asp-page="/Cart">View Cart</a>
+</div>

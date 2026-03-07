@@ -6,11 +6,13 @@ using SportsStore.Models;
 namespace SportsStore.Pages {
 
     public class CartModel : PageModel {
-        private IStoreRepository repository;
+        private readonly IStoreRepository repository;
+        private readonly ILogger<CartModel> logger;
 
-        public CartModel(IStoreRepository repo, Cart cartService) {
+        public CartModel(IStoreRepository repo, Cart cartService, ILogger<CartModel> logger) {
             repository = repo;
             Cart = cartService;
+            this.logger = logger;
         }
 
         public Cart Cart { get; set; }
@@ -25,13 +27,25 @@ namespace SportsStore.Pages {
                 .FirstOrDefault(p => p.ProductID == productId);
             if (product != null) {
                 Cart.AddItem(product, 1);
+                logger.LogInformation(
+                    "Cart item added. CartId: {CartId}, ProductId: {ProductId}, ProductName: {ProductName}, Username: {Username}",
+                    Cart.CartId,
+                    product.ProductID,
+                    product.Name,
+                    User?.Identity?.Name ?? "Anonymous");
             }
             return RedirectToPage(new { returnUrl = returnUrl });
         }
 
         public IActionResult OnPostRemove(long productId, string returnUrl) {
-            Cart.RemoveLine(Cart.Lines.First(cl =>
-                cl.Product.ProductID == productId).Product);
+            var line = Cart.Lines.First(cl => cl.Product.ProductID == productId);
+            Cart.RemoveLine(line.Product);
+            logger.LogInformation(
+                "Cart item removed. CartId: {CartId}, ProductId: {ProductId}, ProductName: {ProductName}, Username: {Username}",
+                Cart.CartId,
+                line.Product.ProductID,
+                line.Product.Name,
+                User?.Identity?.Name ?? "Anonymous");
             return RedirectToPage(new { returnUrl = returnUrl });
         }
     }
