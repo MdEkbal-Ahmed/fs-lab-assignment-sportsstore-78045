@@ -27,12 +27,12 @@ jobs:
 
       - name: Test
         run: |
-          mkdir -p test-results
-          dotnet test SportsSln.sln --no-build --configuration Release --verbosity normal --logger "junit;LogFilePath=test-results/junit.xml"
+          dotnet test SportsSln.sln --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: test-results/junit.xml
+          files: '**/test-results.trx'
           check_name: Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
