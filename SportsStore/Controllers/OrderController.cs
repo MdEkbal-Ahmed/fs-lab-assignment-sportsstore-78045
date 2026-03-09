@@ -80,8 +80,11 @@ namespace SportsStore.Controllers {
                 return View(order);
             }
 
-            var scheme = Request.Scheme;
-            var host = Request.Host.Value;
+            var scheme = Request?.Scheme ?? "http";
+            var host = Request?.Host.Value;
+            if (string.IsNullOrEmpty(host)) {
+                host = "localhost";
+            }
             var successUrl = $"{scheme}://{host}/Order/Success?session_id={{CHECKOUT_SESSION_ID}}";
             var cancelUrl = $"{scheme}://{host}/Order/Cancel";
 
@@ -97,7 +100,9 @@ namespace SportsStore.Controllers {
                     },
                     cancellationToken);
 
-                HttpContext.Session.SetJson("PendingOrder", pending);
+                if (HttpContext?.Session != null) {
+                    HttpContext.Session.SetJson("PendingOrder", pending);
+                }
                 return Redirect(checkoutUrl);
             }
             catch (InvalidOperationException ex) {
