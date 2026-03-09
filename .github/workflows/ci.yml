@@ -29,10 +29,6 @@ jobs:
         run: |
           dotnet test SportsSln.sln --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: '**/test-results.trx'
-          check_name: Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # Optional: test results publishing was causing 403 for this repo
+      # CI requirements are already met by dotnet test (job fails if tests fail),
+      # so the reporting step is removed to keep the workflow green.
