@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SportsStore.Infrastructure;
 
 namespace SportsStore.Models {
@@ -11,6 +11,7 @@ namespace SportsStore.Models {
             SessionCart cart = session?.GetJson<SessionCart>("Cart")
                 ?? new SessionCart();
             cart.Session = session;
+            cart.CartId = session?.Id;
             return cart;
         }
 

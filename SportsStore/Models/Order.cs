@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace SportsStore.Models {
@@ -33,5 +33,11 @@ namespace SportsStore.Models {
 
         [BindNever]
         public bool Shipped { get; set; }
+
+        [BindNever]
+        public string? StripePaymentIntentId { get; set; }
+
+        [BindNever]
+        public string? StripeSessionId { get; set; }
     }
 }

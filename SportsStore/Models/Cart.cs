@@ -1,6 +1,8 @@
-﻿namespace SportsStore.Models {
+namespace SportsStore.Models {
 
     public class Cart {
+
+        public string? CartId { get; set; }
 
         public List<CartLine> Lines { get; set; } = new List<CartLine>();
 
