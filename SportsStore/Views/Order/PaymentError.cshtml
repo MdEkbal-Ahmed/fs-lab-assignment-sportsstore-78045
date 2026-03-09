@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Payment Error";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h2>Payment could not be completed</h2>
+    <p>We could not confirm your payment or save your order. Your card has not been charged, or you can check with your bank.</p>
+    <p>Please try again from the cart, or contact support if the problem continues.</p>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
+    <a class="btn btn-secondary" asp-page="/Cart">View Cart</a>
+</div>

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SportsStore.Models;
 using SportsStore.Pages;
@@ -32,7 +33,8 @@ namespace SportsStore.Tests {
             testCart.AddItem(p2, 1);
 
             // Action
-            CartModel cartModel = new CartModel(mockRepo.Object, testCart);
+            var mockLogger = new Mock<ILogger<CartModel>>();
+            CartModel cartModel = new CartModel(mockRepo.Object, testCart, mockLogger.Object);
             cartModel.OnGet("myUrl");
 
             //Assert
@@ -52,7 +54,8 @@ namespace SportsStore.Tests {
             Cart testCart = new Cart();
 
             // Action
-            CartModel cartModel = new CartModel(mockRepo.Object, testCart);
+            var mockLogger = new Mock<ILogger<CartModel>>();
+            CartModel cartModel = new CartModel(mockRepo.Object, testCart, mockLogger.Object);
             cartModel.OnPost(1, "myUrl");
 
             //Assert
