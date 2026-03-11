@@ -152,6 +152,8 @@ A workflow runs on **push** and **pull_request** to **main** and restores, build
 dotnet user-secrets set "Stripe:WebhookSecret" "whsec_" --project SportsStore\SportsStore.csproj
 ---
 
+check ci
+
 
 
 
